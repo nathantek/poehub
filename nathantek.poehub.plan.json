@@ -1,0 +1,7 @@
+{
+  "name": "poehub",
+  "runtime": "node",
+  "build": "npm install",
+  "start": "npm run dev",
+  "root": "."
+}

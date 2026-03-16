@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculateur d'Équipement - Path of Exile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      margin: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #f0b90b;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .slot, .base-section {
+      background: #2a2a2a;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 0 5px #000;
+    }
+
+    .slot h3, .base-section h3 {
+      text-align: center;
+      color: #f0b90b;
+    }
+
+    label {
+      display: block;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 6px;
+      margin-top: 4px;
+      background: #3a3a3a;
+      border: 1px solid #555;
+      color: #fff;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 25px;
+      background: #f0b90b;
+      border: none;
+      border-radius: 8px;
+      color: #000;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #ffc300;
+    }
+
+    .results {
+      margin-top: 30px;
+      background: #222;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .results h2 {
+      margin-top: 0;
+    }
+
+    .results p {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+
+    .base-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .base-section {
+      flex: 1 1 280px;
+    }
+
+    @media (max-width: 520px) {
+      input { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calculateur d'Équipement - Path of Exile</h1>
+  <p style="text-align:center;">Renseigne les stats de ton équipement, tes bases, et clique sur <b>Calc</b>.</p>
+
+  <!-- SECTION BASES -->
+  <div class="base-container">
+    <div class="base-section">
+      <h3>Base Res</h3>
+      <label>🔥 Fire Resist</label><input type="number" id="baseFire" value="0">
+      <label>❄️ Cold Resist</label><input type="number" id="baseCold" value="0">
+      <label>⚡ Lightning Resist</label><input type="number" id="baseLightning" value="0">
+      <label>☠️ Chaos Resist</label><input type="number" id="baseChaos" value="0">
+    </div>
+
+    <div class="base-section">
+      <h3>Base Stats</h3>
+      <label>💪 STR</label><input type="number" id="baseStr" value="0">
+      <label>🏹 DEX</label><input type="number" id="baseDex" value="0">
+      <label>🧠 INT</label><input type="number" id="baseInt" value="0">
+    </div>
+  </div>
+
+  <!-- SECTION EQUIPEMENT -->
+  <div class="grid" id="equipment">
+    <!-- Slots générés en JS -->
+  </div>
+
+  <button id="calc">Calc</button>
+
+  <div class="results" id="results">
+    <h2>Résultats Totaux</h2>
+    <p id="resists">Résistances : 🔥 0 | ❄️ 0 | ⚡ 0 | ☠️ 0</p>
+    <p id="armor">Armure totale : 0</p>
+    <p id="stats">STR : 0 | DEX : 0 | INT : 0</p>
+    <p id="price">Prix total : 0 Divine, 0 Chaos</p>
+  </div>
+
+  <script>
+    const slots = [
+      "Casque", "Armure", "Gants", "Ceinture", "Bottes",
+      "Amulette", "Anneau 1", "Anneau 2", "Arme"
+    ];
+
+    const container = document.getElementById("equipment");
+
+    // Génération
+    slots.forEach(slot => {
+      const div = document.createElement("div");
+      div.className = "slot";
+      div.innerHTML = `
+        <h3>${slot}</h3>
+        <label>🔥 Fire Resist</label><input type="number" class="fire" value="0">
+        <label>❄️ Cold Resist</label><input type="number" class="cold" value="0">
+        <label>⚡ Lightning Resist</label><input type="number" class="lightning" value="0">
+        <label>☠️ Chaos Resist</label><input type="number" class="chaos" value="0">
+        <label>🛡️ Armure</label><input type="number" class="armor" value="0">
+        <label>💪 STR</label><input type="number" class="str" value="0">
+        <label>🏹 DEX</label><input type="number" class="dex" value="0">
+        <label>🧠 INT</label><input type="number" class="int" value="0">
+        <label>💰 Prix en Chaos</label><input type="number" class="chaosPrice" value="0">
+        <label>💎 Prix en Divine</label><input type="number" class="divinePrice" value="0">
+      `;
+      container.appendChild(div);
+    });
+
+    document.getElementById("calc").addEventListener("click", () => {
+      let total = {
+        fire: 0, cold: 0, lightning: 0, chaos: 0,
+        armor: 0, str: 0, dex: 0, int: 0,
+        chaosPrice: 0, divinePrice: 0
+      };
+
+      // Somme
+      document.querySelectorAll(".slot").forEach(slot => {
+        total.fire += +slot.querySelector(".fire").value || 0;
+        total.cold += +slot.querySelector(".cold").value || 0;
+        total.lightning += +slot.querySelector(".lightning").value || 0;
+        total.chaos += +slot.querySelector(".chaos").value || 0;
+        total.armor += +slot.querySelector(".armor").value || 0;
+        total.str += +slot.querySelector(".str").value || 0;
+        total.dex += +slot.querySelector(".dex").value || 0;
+        total.int += +slot.querySelector(".int").value || 0;
+        total.chaosPrice += +slot.querySelector(".chaosPrice").value || 0;
+        total.divinePrice += +slot.querySelector(".divinePrice").value || 0;
+      });
+
+      // Ajout des rés
+      total.fire += +document.getElementById("baseFire").value || 0;
+      total.cold += +document.getElementById("baseCold").value || 0;
+      total.lightning += +document.getElementById("baseLightning").value || 0;
+      total.chaos += +document.getElementById("baseChaos").value || 0;
+
+      // Ajout des stats
+      total.str += +document.getElementById("baseStr").value || 0;
+      total.dex += +document.getElementById("baseDex").value || 0;
+      total.int += +document.getElementById("baseInt").value || 0;
+
+      // Résultat
+      document.getElementById("resists").textContent =
+        `Résistances : 🔥 ${total.fire} | ❄️ ${total.cold} | ⚡ ${total.lightning} | ☠️ ${total.chaos}`;
+      document.getElementById("armor").textContent = `Armure totale : ${total.armor}`;
+      document.getElementById("stats").textContent = `STR : ${total.str} | DEX : ${total.dex} | INT : ${total.int}`;
+      document.getElementById("price").textContent = `Prix total : ${total.divinePrice} Divine, ${total.chaosPrice} Chaos`;
+    });
+  </script>
+
+</body>
+</html>

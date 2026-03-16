@@ -1,0 +1,18 @@
+{
+  "name": "poehub",
+  "version": "0.1.0",
+  "description": "PoeHUB - portail d'outils Path of Exile avec hub personnalisable",
+  "private": true,
+  "scripts": {
+    "dev": "node backend/server.js",
+    "start": "node backend/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "mysql2": "^3.9.2",
+    "uuid": "^9.0.1"
+  }
+}
+

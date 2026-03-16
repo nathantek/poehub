@@ -1,0 +1,188 @@
+/* PoeHUB – style de base, prêt pour images cliquables */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #111317;
+  --bg-card: #1b1f27;
+  --border: #2c3240;
+  --accent: #f0b90b;
+  --text: #e5e9f0;
+  --text-muted: #9aa4bf;
+  --radius: 12px;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-width: 100%;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.page-header {
+  padding: clamp(12px, 3vw, 24px) clamp(12px, 4vw, 20px);
+  text-align: center;
+}
+
+.page-header h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  color: var(--accent);
+}
+
+.page-header p {
+  margin: 0;
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  color: var(--text-muted);
+}
+
+.hub-main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(12px, 4vw, 24px);
+  padding-bottom: max(clamp(12px, 4vw, 24px), env(safe-area-inset-bottom));
+}
+
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+  gap: clamp(12px, 2.5vw, 24px);
+}
+
+.hub-card {
+  aspect-ratio: 16 / 10;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+}
+
+.hub-link {
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.hub-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.08) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: background-position 0.5s ease;
+}
+
+.hub-link:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(240, 185, 11, 0.25);
+}
+
+.hub-link:hover::after {
+  background-position: -100% 0;
+}
+
+.hub-link .hub-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: blur(3px);
+}
+
+.hub-card-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.95rem, 4.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  padding: 4px;
+  text-align: center;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.95);
+  text-stroke: 1px rgba(0, 0, 0, 0.95);
+  text-shadow:
+    0 0 12px rgba(0, 0, 0, 0.9),
+    0 1px 3px rgba(0, 0, 0, 1),
+    1px 1px 0 rgba(0, 0, 0, 0.9),
+    -1px -1px 0 rgba(0, 0, 0, 0.9),
+    1px -1px 0 rgba(0, 0, 0, 0.9),
+    -1px 1px 0 rgba(0, 0, 0, 0.9);
+  z-index: 1;
+  pointer-events: none;
+  transition: text-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.hub-link:hover .hub-card-label {
+  text-shadow:
+    0 0 12px rgba(0, 0, 0, 0.9),
+    0 1px 3px rgba(0, 0, 0, 1),
+    1px 1px 0 rgba(0, 0, 0, 0.9),
+    -1px -1px 0 rgba(0, 0, 0, 0.9),
+    1px -1px 0 rgba(0, 0, 0, 0.9),
+    -1px 1px 0 rgba(0, 0, 0, 0.9),
+    0 0 20px rgba(240, 185, 11, 0.5),
+    0 0 30px rgba(240, 185, 11, 0.3);
+  filter: brightness(1.1);
+}
+
+/* Très petits écrans : une colonne, cartes un peu moins hautes */
+@media (max-width: 380px) {
+  .hub-card {
+    aspect-ratio: 16 / 9;
+    min-height: 70px;
+  }
+  .hub-card-label {
+    letter-spacing: 0.08em;
+  }
+}
+
+/* Écrans moyens : 2 colonnes déjà gérées par auto-fit */
+@media (min-width: 600px) and (max-width: 899px) {
+  .hub-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Grands écrans : cartes plus grandes, 2 ou 3 colonnes */
+@media (min-width: 900px) {
+  .hub-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}

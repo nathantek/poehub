@@ -1,0 +1,29 @@
+# Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Cursor / tooling
+.cursor/
+terminals/
+
+# Build / cache
+dist/
+build/
+.cache/
+
+# Legacy file not nécessaire en prod
+oldbase.html
+
